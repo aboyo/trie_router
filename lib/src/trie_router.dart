@@ -99,7 +99,10 @@ class TrieRouter<T> {
         current = current.getWhere((k) => k != null && k.startsWith(':'));
 
         // Add the current segment to the parameters. E.g. ':id': '123'
-        parameters[current!.key!] = segment;
+        parameters[current!.key!.replaceFirst(':', '')] = segment;
+      } else if (current.containsWhere((k) => k == '*')) { // allow wildcard
+        parameters[current.key!] = route;
+        break;
       } else {
         return null;
       }
